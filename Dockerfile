@@ -1,8 +1,9 @@
 FROM alpine:3.5
 
 ENV PATH $PATH:/usr/local/avr/bin
+ENV ARDUINO_IDE_VERSION 1.8.3
 
-RUN apk add --no-cache openssl bash git gcc g++ libc-dev gmp-dev mpfr-dev mpc1-dev make \
+RUN apk add --no-cache  wget ca-certificates openssl bash git gcc g++ libc-dev gmp-dev mpfr-dev mpc1-dev make \
 # Create build folder
 && NPROC=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1) && mkdir /tmp/distr && cd /tmp/distr \
 #
@@ -38,4 +39,9 @@ RUN apk add --no-cache openssl bash git gcc g++ libc-dev gmp-dev mpfr-dev mpc1-d
 && ./configure --prefix=/usr/local/avr --build=`./config.guess` --host=avr \
 && make -j${NPROC} && make install && cd ../.. \
 && rm -rf /tmp/distr \
-&& apk del openssl libc-dev gmp-dev mpfr-dev mpc1-dev
+&& apk del openssl libc-dev gmp-dev mpfr-dev mpc1-dev \
+&& mkdir /opt \
+&& wget -q -O- https://downloads.arduino.cc/arduino-${ARDUINO_IDE_VERSION}-linux64.tar.xz | tar xJ -C /opt \
+&& ln -s /opt/arduino-${ARDUINO_IDE_VERSION}/arduino /usr/local/bin/ \
+&& ln -s /opt/arduino-${ARDUINO_IDE_VERSION}/arduino-builder /usr/local/bin/ \
+&& ln -s /opt/arduino-${ARDUINO_IDE_VERSION} /opt/arduino
