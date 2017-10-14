@@ -3,7 +3,7 @@ FROM alpine:3.5
 ENV PATH $PATH:/usr/local/avr/bin
 ENV ARDUINO_IDE_VERSION 1.8.3
 
-RUN apk add --no-cache  wget ca-certificates openssl bash git gcc g++ libc-dev gmp-dev mpfr-dev mpc1-dev make \
+RUN apk add --no-cache  wget ca-certificates openssl bash git gcc g++ libc-dev gmp-dev mpfr-dev mpc1-dev make avrdude \
 # Create build folder
 && NPROC=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1) && mkdir /tmp/distr && cd /tmp/distr \
 #
